@@ -1,0 +1,38 @@
+# VCS
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+.mypy_cache
+.ruff_cache
+*.egg-info
+.venv
+venv
+
+# Runtime artifacts (built fresh inside container)
+runtime/
+vault/
+
+# Dev / docs / OS
+docs/
+tests/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.omc/
+
+# Environment (use compose env or runtime mount)
+.env
+.env.local
+
+# Docker meta itself (not needed inside image)
+Dockerfile
+docker-compose.yml
+.dockerignore
+# (docker/entrypoint.sh IS needed — don't exclude the docker/ dir)

@@ -1,0 +1,46 @@
+services:
+  briefing:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: briefing:latest
+    container_name: briefing
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # 컨테이너 내부 경로. 호스트 path와 헷갈리지 말 것.
+      BRIEFING_DB_PATH: /app/runtime/briefing.db
+      BRIEFING_LOG_PATH: /app/runtime/briefing.log
+      BRIEFING_VAULT_PATH: /app/vault
+      BRIEFING_STOPWORDS_PATH: /app/data/stopwords.txt
+      BRIEFING_GIT_REMOTE: ${BRIEFING_GIT_REMOTE:-origin}
+      BRIEFING_GIT_BRANCH: ${BRIEFING_GIT_BRANCH:-main}
+      BRIEFING_GIT_USER_NAME: ${BRIEFING_GIT_USER_NAME:-briefing-bot}
+      BRIEFING_GIT_USER_EMAIL: ${BRIEFING_GIT_USER_EMAIL:-briefing@example.com}
+      BRIEFING_WORKER_INTERVAL_SEC: ${BRIEFING_WORKER_INTERVAL_SEC:-5}
+      BRIEFING_SYNC_IDLE_SEC: ${BRIEFING_SYNC_IDLE_SEC:-60}
+      BRIEFING_MAX_RETRY: ${BRIEFING_MAX_RETRY:-3}
+      BRIEFING_DOORAY_TOKEN: ${BRIEFING_DOORAY_TOKEN:-}
+      BRIEFING_ADMIN_USER: ${BRIEFING_ADMIN_USER:-admin}
+      BRIEFING_ADMIN_PASSWORD: ${BRIEFING_ADMIN_PASSWORD:?must set BRIEFING_ADMIN_PASSWORD}
+      BRIEFING_KEYWORD_TOP_N: ${BRIEFING_KEYWORD_TOP_N:-5}
+      # Optional: entrypoint이 vault에 remote를 자동 등록.
+      BRIEFING_GIT_REMOTE_URL: ${BRIEFING_GIT_REMOTE_URL:-}
+      # git config가 컨테이너 내부에서도 동작하도록.
+      GIT_AUTHOR_NAME: ${BRIEFING_GIT_USER_NAME:-briefing-bot}
+      GIT_AUTHOR_EMAIL: ${BRIEFING_GIT_USER_EMAIL:-briefing@example.com}
+      GIT_COMMITTER_NAME: ${BRIEFING_GIT_USER_NAME:-briefing-bot}
+      GIT_COMMITTER_EMAIL: ${BRIEFING_GIT_USER_EMAIL:-briefing@example.com}
+    volumes:
+      # SQLite DB + 로그. 컨테이너 재시작/재빌드에도 보존되어야 함.
+      - briefing-runtime:/app/runtime
+      # 서버측 vault 작업본. git repo로 사용됨. push 대상.
+      - briefing-vault:/app/vault
+      # SSH 키 (git push용). 호스트의 ~/.ssh를 read-only로 마운트.
+      # 사용 안 하면 이 줄을 제거.
+      - ${HOME:-~}/.ssh:/home/briefing/.ssh:ro
+
+volumes:
+  briefing-runtime:
+  briefing-vault:
