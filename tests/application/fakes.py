@@ -56,6 +56,10 @@ class FakeArticleRepository:
     ) -> None:
         a = self.by_id[id]
         retry = a.retry_count + (1 if increment_retry else 0)
+        new_error = a.error
+        if error is not None:
+            # Empty string is the "clear" sentinel (since None means "leave unchanged")
+            new_error = error if error != "" else None
         self.by_id[id] = Article(
             id=a.id,
             source=a.source,
@@ -69,7 +73,7 @@ class FakeArticleRepository:
             raw_payload=dict(a.raw_payload),
             status=status,
             output_path=output_path or a.output_path,
-            error=error if error is not None else a.error,
+            error=new_error,
             retry_count=retry,
             processed_at=a.processed_at,
             published_at=a.published_at,
