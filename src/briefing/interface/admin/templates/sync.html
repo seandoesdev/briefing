@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Sync</h1>
+<p>Last push: {{ summary.sync.last_push_at or "—" }}</p>
+<p>Last commit: {{ summary.sync.last_commit_sha or "—" }}</p>
+<p>Last error: <span class="err">{{ summary.sync.last_error or "—" }}</span></p>
+<button hx-post="/admin/sync/push" hx-swap="none">Manual push</button>
+{% endblock %}

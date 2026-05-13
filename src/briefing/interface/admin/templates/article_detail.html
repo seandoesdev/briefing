@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>{{ a.title }}</h1>
+<p><strong>source:</strong> {{ a.source }} · <strong>status:</strong> {{ a.status.value }} ·
+   <strong>received:</strong> {{ a.received_at }}</p>
+{% if a.url %}<p><strong>url:</strong> <a href="{{ a.url }}">{{ a.url }}</a></p>{% endif %}
+<p><strong>tags:</strong> {% for t in a.tags %}#{{ t }} {% endfor %}</p>
+{% if a.error %}<p class="err"><strong>error:</strong> {{ a.error }}</p>{% endif %}
+<h3>Body</h3>
+<pre>{{ a.body }}</pre>
+<h3>Raw payload</h3>
+<pre>{{ a.raw_payload }}</pre>
+<form method="post" action="/admin/articles/{{ a.id }}/retry">
+  <button type="submit">Retry</button>
+</form>
+{% endblock %}

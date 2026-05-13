@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Briefing{% endblock %}
+{% block body %}
+<h1>Dashboard</h1>
+<ul>
+  <li>Pending: <strong>{{ summary.pending_count }}</strong></li>
+  <li>Per source:
+    <ul>{% for k, v in summary.per_source.items() %}<li>{{ k }}: {{ v }}</li>{% endfor %}</ul>
+  </li>
+  <li>Last push: {{ summary.sync.last_push_at or "—" }} ({{ summary.sync.last_commit_sha or "—" }})</li>
+  <li>Last sync error: {{ summary.sync.last_error or "—" }}</li>
+</ul>
+{% endblock %}

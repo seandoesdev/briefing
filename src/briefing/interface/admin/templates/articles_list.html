@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Articles</h1>
+<form method="get" action="/admin/articles">
+  <input type="text" name="q" value="{{ filter.query or '' }}" placeholder="search">
+  <select name="status">
+    <option value="">(any)</option>
+    {% for s in ["received", "processed", "published", "failed"] %}
+    <option value="{{ s }}" {% if filter.status and filter.status.value == s %}selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Filter</button>
+</form>
+<table>
+  <thead><tr><th>time</th><th>source</th><th>title</th><th>status</th><th>tags</th></tr></thead>
+  <tbody>
+  {% for a in items %}
+    <tr>
+      <td>{{ a.received_at }}</td>
+      <td>{{ a.source }}</td>
+      <td><a href="/admin/articles/{{ a.id }}">{{ a.title }}</a></td>
+      <td><span class="badge">{{ a.status.value }}</span></td>
+      <td>{% for t in a.tags %}#{{ t }} {% endfor %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Logs (tail {{ tail }})</h1>
+{% if lines %}<pre>{% for ln in lines %}{{ ln }}
+{% endfor %}</pre>{% else %}<p>(log file not found)</p>{% endif %}
+{% endblock %}

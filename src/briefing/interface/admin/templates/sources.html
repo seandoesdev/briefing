@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Sources</h1>
+<table>
+  <thead><tr><th>name</th><th>count</th></tr></thead>
+  <tbody>
+  {% for s in items %}<tr><td>{{ s.name }}</td><td>{{ s.count }}</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}
