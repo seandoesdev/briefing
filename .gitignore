@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.venv/
+venv/
+
+# Briefing runtime artifacts
+data/briefing.db
+data/briefing.log
+data/briefing.log.*
+
+# Vault working copy (별도 git repo로 관리되는 영역)
+vault/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
