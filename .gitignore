@@ -14,8 +14,8 @@ data/briefing.db
 data/briefing.log
 data/briefing.log.*
 
-# Vault working copy (별도 git repo로 관리되는 영역)
-vault/
+# Vault working copy (별도 git repo로 관리되는 영역) — root only
+/vault/
 
 # Editors / OS
 .vscode/
