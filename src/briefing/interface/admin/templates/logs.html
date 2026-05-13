@@ -1,6 +1,25 @@
 {% extends "base.html" %}
+{% block title %}Logs — Briefing{% endblock %}
 {% block body %}
-<h1>Logs (tail {{ tail }})</h1>
-{% if lines %}<pre>{% for ln in lines %}{{ ln }}
-{% endfor %}</pre>{% else %}<p>(log file not found)</p>{% endif %}
+
+<div class="flex items-baseline justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-semibold tracking-tight">Logs</h1>
+    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">briefing.log tail · 마지막 {{ tail }}줄</p>
+  </div>
+  <div class="flex items-center gap-2">
+    <a href="?tail=100" class="text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">100</a>
+    <a href="?tail=500" class="text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">500</a>
+    <a href="?tail=1000" class="text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">1000</a>
+  </div>
+</div>
+
+<div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-900 dark:bg-slate-950 shadow-sm overflow-hidden">
+  {% if lines %}
+    <pre class="text-xs mono text-slate-200 p-5 overflow-auto max-h-[70vh] leading-relaxed">{% for ln in lines %}{{ ln }}
+{% endfor %}</pre>
+  {% else %}
+    <div class="p-8 text-center text-slate-400">(로그 파일이 아직 비어있거나 존재하지 않습니다)</div>
+  {% endif %}
+</div>
 {% endblock %}

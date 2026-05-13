@@ -1,8 +1,54 @@
 {% extends "base.html" %}
+{% from "_macros.html" import card %}
+{% block title %}Sync — Briefing{% endblock %}
 {% block body %}
-<h1>Sync</h1>
-<p>Last push: {{ summary.sync.last_push_at or "—" }}</p>
-<p>Last commit: {{ summary.sync.last_commit_sha or "—" }}</p>
-<p>Last error: <span class="err">{{ summary.sync.last_error or "—" }}</span></p>
-<button hx-post="/admin/sync/push" hx-swap="none">Manual push</button>
+
+<h1 class="text-2xl font-semibold tracking-tight mb-1">Sync</h1>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-6">서버측 vault git repo 동기화 상태</p>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
+    <p class="text-xs uppercase tracking-wide font-medium text-slate-500 dark:text-slate-400">Last push</p>
+    <p class="mt-2 text-base font-medium">
+      {{ summary.sync.last_push_at.strftime('%Y-%m-%d %H:%M:%S') if summary.sync.last_push_at else '아직 없음' }}
+    </p>
+  </div>
+
+  <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
+    <p class="text-xs uppercase tracking-wide font-medium text-slate-500 dark:text-slate-400">Last commit</p>
+    <p class="mt-2 text-base font-mono truncate">
+      {{ summary.sync.last_commit_sha[:12] if summary.sync.last_commit_sha else '—' }}
+    </p>
+  </div>
+
+  <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
+    <p class="text-xs uppercase tracking-wide font-medium text-slate-500 dark:text-slate-400">상태</p>
+    {% if summary.sync.last_error %}
+      <p class="mt-2 text-base font-medium text-rose-600 dark:text-rose-400">Error</p>
+    {% else %}
+      <p class="mt-2 text-base font-medium text-emerald-600 dark:text-emerald-400">Healthy</p>
+    {% endif %}
+  </div>
+</div>
+
+{% if summary.sync.last_error %}
+  <div class="mb-6 rounded-lg border border-rose-200 dark:border-rose-900/50 bg-rose-50 dark:bg-rose-950/40 p-4">
+    <p class="text-sm font-medium text-rose-700 dark:text-rose-300">마지막 에러</p>
+    <pre class="mt-1 text-xs text-rose-700 dark:text-rose-300 whitespace-pre-wrap">{{ summary.sync.last_error }}</pre>
+  </div>
+{% endif %}
+
+{% call card(title='수동 푸시') %}
+  <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
+    PROCESSED 상태의 article이 있을 때만 동작합니다. 정상 흐름에서는 worker가 60초 idle 후 자동 commit/push.
+  </p>
+  <div class="flex items-center gap-3">
+    <button hx-post="/admin/sync/push" hx-target="#push-result" hx-swap="innerHTML"
+            class="px-4 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-500 transition">
+      ▶ Manual push
+    </button>
+    <span class="htmx-indicator text-xs text-slate-500">pushing…</span>
+    <span id="push-result" class="text-xs text-slate-600 dark:text-slate-400"></span>
+  </div>
+{% endcall %}
 {% endblock %}

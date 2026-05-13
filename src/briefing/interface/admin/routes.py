@@ -31,8 +31,9 @@ def build_admin_router(
     @router.get("/admin", response_class=HTMLResponse, dependencies=[auth_dep])
     def dashboard(request: Request):
         summary = queries.dashboard()
+        recent = queries.list_articles(AdminFilter(limit=8, offset=0))
         return templates.TemplateResponse(
-            request, "dashboard.html", {"summary": summary}
+            request, "dashboard.html", {"summary": summary, "recent": recent}
         )
 
     @router.get("/admin/articles", response_class=HTMLResponse, dependencies=[auth_dep])

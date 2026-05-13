@@ -30,7 +30,7 @@ dev = [
 where = ["src"]
 
 [tool.setuptools.package-data]
-"briefing.interface.admin" = ["templates/*.html"]
+"briefing.interface.admin" = ["templates/*.html", "templates/_*.html"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

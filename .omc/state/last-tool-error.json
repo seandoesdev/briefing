@@ -1,0 +1,7 @@
+{
+  "tool_name": "PowerShell",
+  "tool_input_preview": "{\"command\":\"[Console]::OutputEncoding = [Text.UTF8Encoding]::new()\\n$OutputEncoding = [Text.UTF8Encoding]::new()\\nchcp 65001 | Out-Null\\n\\\"--- vault markdown (UTF-8 readout) ---\\\"\\ndocker exec briefin...",
+  "error": "Exit code 127\n--- vault markdown (UTF-8 readout) ---\r\n# 2026-05-13\r\n\r\n## 08:16 — ??? AI ??? ??\r\n**source**: dooray · **tags**: #AI\r\n**url**: https://news.example.com/a\r\n\r\n???? ??? AI ???? ??????.\r\n\r\nAI ?? ??? ?? ?? 3? ?????.\r\n\r\n---\r\n\r\n## 08:16 — ??: ?? ?? ?? ?? ??????.\r\n**source**: dooray · **tags**: (none)\r\n\r\n??: ?? ?? ?? ?? ??????.\r\n\r\n---\r\n\r\n## 08:16 — {\r\n**source**: dooray · **tags**: #post #event #created #subject #body\r\n\r\n{\r\n  \"event\": \"post_created\",\r\n  \"post\": {\r\n    \"subject\": \"?? ??? #1...",
+  "timestamp": "2026-05-13T08:17:20.491Z",
+  "retry_count": 2
+}

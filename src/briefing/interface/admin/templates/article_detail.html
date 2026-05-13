@@ -1,16 +1,53 @@
 {% extends "base.html" %}
+{% from "_macros.html" import status_badge, tag_chip, card %}
+{% block title %}{{ a.title }} — Briefing{% endblock %}
 {% block body %}
-<h1>{{ a.title }}</h1>
-<p><strong>source:</strong> {{ a.source }} · <strong>status:</strong> {{ a.status.value }} ·
-   <strong>received:</strong> {{ a.received_at }}</p>
-{% if a.url %}<p><strong>url:</strong> <a href="{{ a.url }}">{{ a.url }}</a></p>{% endif %}
-<p><strong>tags:</strong> {% for t in a.tags %}#{{ t }} {% endfor %}</p>
-{% if a.error %}<p class="err"><strong>error:</strong> {{ a.error }}</p>{% endif %}
-<h3>Body</h3>
-<pre>{{ a.body }}</pre>
-<h3>Raw payload</h3>
-<pre>{{ a.raw_payload }}</pre>
-<form method="post" action="/admin/articles/{{ a.id }}/retry">
-  <button type="submit">Retry</button>
-</form>
+
+<div class="mb-6">
+  <a href="/admin/articles" class="text-xs text-slate-500 hover:text-slate-900 dark:hover:text-white">← Articles</a>
+  <h1 class="mt-2 text-2xl font-semibold tracking-tight">{{ a.title or '(no title)' }}</h1>
+
+  <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-500 dark:text-slate-400">
+    <span class="mono text-xs">{{ a.source }}</span>
+    <span>·</span>
+    {{ status_badge(a.status) }}
+    <span>·</span>
+    <span class="mono text-xs">{{ a.received_at.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+    {% if a.url %}
+      <span>·</span>
+      <a href="{{ a.url }}" target="_blank" rel="noopener" class="text-indigo-600 dark:text-indigo-400 hover:underline truncate max-w-md">{{ a.url }}</a>
+    {% endif %}
+  </div>
+
+  {% if a.tags %}
+    <div class="mt-3">{% for t in a.tags %}{{ tag_chip(t) }}{% endfor %}</div>
+  {% endif %}
+</div>
+
+{% if a.error %}
+  <div class="mb-4 rounded-lg border border-rose-200 dark:border-rose-900/50 bg-rose-50 dark:bg-rose-950/40 p-4">
+    <p class="text-sm font-medium text-rose-700 dark:text-rose-300">처리 에러</p>
+    <pre class="mt-1 text-xs text-rose-700 dark:text-rose-300 whitespace-pre-wrap">{{ a.error }}</pre>
+  </div>
+{% endif %}
+
+{% call card(title='본문') %}
+  <pre class="text-sm whitespace-pre-wrap break-words leading-relaxed">{{ a.body }}</pre>
+{% endcall %}
+
+<div class="mt-4">
+  {% call card(title='Raw payload') %}
+    <pre class="text-xs mono text-slate-600 dark:text-slate-300 whitespace-pre-wrap overflow-auto max-h-96">{{ a.raw_payload | tojson(indent=2) }}</pre>
+  {% endcall %}
+</div>
+
+<div class="mt-6 flex items-center gap-2">
+  <form method="post" action="/admin/articles/{{ a.id }}/retry">
+    <button type="submit"
+            class="px-4 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-500 transition">
+      ↻ Retry
+    </button>
+  </form>
+  <p class="text-xs text-slate-500">실패/완료 상관없이 RECEIVED 상태로 되돌려 워커가 다시 처리하게 합니다.</p>
+</div>
 {% endblock %}
